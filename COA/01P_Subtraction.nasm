@@ -21,7 +21,7 @@ len1 equ $-msg1
 msg2 db "Enter b : "
 len2 equ $-msg2
 
-msg3 db "Addition : "
+msg3 db "Substraction : "
 len3 equ $-msg3
 
 section .bss
@@ -57,7 +57,7 @@ WRITE msg3, len3
 
 mov rax, [a]
 mov rbx, [b]
-add rax, rbx
+sub rax, rbx
 mov [c], rax
 
 mov rbx, [c]
@@ -87,12 +87,13 @@ sub30: sub dl, 30H
  inc rsi
  dec rcx
  jnz up
+ ret
  
  
  display:
  mov rsi, char_buff
  mov rcx, 16
- up1:rol rbx, 04H
+ up1:rol rbx, 04
  mov dl, bl
  and dl, 0FH
  cmp dl, 09
@@ -105,3 +106,4 @@ sub30: sub dl, 30H
  jnz up1
  WRITE char_buff, 16
  ret
+ 
