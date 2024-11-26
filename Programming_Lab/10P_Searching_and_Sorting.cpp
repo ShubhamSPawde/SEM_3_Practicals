@@ -61,6 +61,59 @@ void QuickSort(int arr[], int low, int high) {
     QuickSort(arr, pivot + 1, high);
 }
 
+
+// Fibonacci Search Function
+int fibonacciSearch(int arr[], int n, int x) {
+    // Initialize Fibonacci numbers
+    int fib2 = 0;  // (m-2)'th Fibonacci number
+    int fib1 = 1;  // (m-1)'th Fibonacci number
+    int fibM = fib2 + fib1;  // m'th Fibonacci number
+
+    // Find the smallest Fibonacci number greater than or equal to n
+    while (fibM < n) {
+        fib2 = fib1;
+        fib1 = fibM;
+        fibM = fib2 + fib1;
+    }
+
+    // Marks the eliminated range from the front
+    int offset = -1;
+
+    // While there are elements to inspect
+    while (fibM > 1) {
+        // Check if fib2 is a valid index
+        int i = min(offset + fib2, n - 1);
+
+        // If x is greater than the value at index i, cut the subarray after i
+        if (arr[i] < x) {
+            fibM = fib1;
+            fib1 = fib2;
+            fib2 = fibM - fib1;
+            offset = i;
+        }
+        // If x is less than the value at index i, cut the subarray before i
+        else if (arr[i] > x) {
+            fibM = fib2;
+            fib1 -= fib2;
+            fib2 = fibM - fib1;
+        }
+        // Element found
+        else {
+            return i;
+        }
+    }
+
+    // Compare the last element with x
+    if (fib1 && arr[offset + 1] == x) {
+        return offset + 1;
+    }
+
+    // Element not found
+    return -1;
+}
+
+
+
 int main() {
     srand(time(0));
 
