@@ -60,7 +60,7 @@ int expression::opprecedence(string c)
 
 void expression::prefix_to_infix()
 {
-    cout << "Enter string: ";
+    cout << "Enter prefix String : ";
     cin >> prefix;
     for (int i = prefix.length() - 1; i >= 0; i--)
     {
@@ -76,26 +76,28 @@ void expression::prefix_to_infix()
             s.push(string(1, prefix[i]));
         }
     }
-    cout << "Infix: " << s.pop() << endl;
+    cout << "Infix : " << s.pop() << endl;
 }
 
 void expression::infix_to_post()
 {
+    postfix = "";
     cout << "Enter Infix String: ";
     cin >> infix;
+
     for (int i = 0; i < infix.length(); i++)
     {
         if (infix[i] == '(')
         {
-            s.push("(");
+            s.push(string(1, infix[i]));
         }
-        else if (isoperator(infix[i]) == false && infix[i] != '(' && infix[i] != ')')
+        else if (!isoperator(infix[i]) && infix[i] != '(' && infix[i] == ')')
         {
             postfix += infix[i];
         }
         else if (infix[i] == ')')
         {
-            while (s.peep() != "(" && !s.isEmpty())
+            while (s.peep() != "(" && s.isEmpty())
             {
                 string temp = s.pop();
                 postfix += temp;
@@ -104,7 +106,7 @@ void expression::infix_to_post()
         }
         else
         {
-            while (opprecedence(string(1, infix[i])) <= opprecedence(s.peep()) && !s.isEmpty())
+            while (opprecedence(string(1,infix[i])) <= opprecedence(s.peep()) && !s.isEmpty())
             {
                 string temp = s.pop();
                 postfix += temp;
@@ -117,71 +119,40 @@ void expression::infix_to_post()
         string temp = s.pop();
         postfix += temp;
     }
+
     cout << "Postfix: " << postfix << endl;
 }
-int postfixEvaluate(string str){
 
-	stack<int> st;
-
-	for (int i = 0; i < str.length(); i++)
-	{
-		if(str[i] >= '0' && str[i] <= '9'){
-			st.push(str[i]-'0');
-		}
-		else{
-			int op2 = st.top();
-			st.pop();
-			int op1 = st.top();
-			st.pop();
-			switch (str[i])
-			{
-			case '+':
-				st.push(op1 + op2);
-				break;
-			case '-':
-				st.push(op1 - op2);
-				break;
-			case '*':
-				st.push(op1 * op2);
-				break;
-			case '/':
-				st.push(op1 / op2);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-
-	return st.top();
-	
-}
 void expression::post_eval()
 {
-    cout << "Enter postfix expression (space-separated): ";
-    string input;
-    cin.ignore();
-    getline(cin, input);
+    cout << "Enter postfix expression : ";
+    cin>>postfix;
+    // cin.ignore(); // To clear the buffer
+    // getline(cin, postfix);
 
-    stringstream ss(input);
-    string token;
+    // string token;
+    int res = 0;
+    int op_1, op_2;
 
-    while (ss >> token)
+    for (int i = 0; i < postfix.length(); i++)
     {
-        if (isoperator(token[0]) && token.length() == 1)
+        // if (postfix[i] == ' ')
+        //     continue;
+
+        // string token(1, postfix[i]);
+
+        if (isoperator(postfix[i]))
         {
-            string op2 = s.pop();
-            string op1 = s.pop();
+            string op2_str = s.pop();
+            string op1_str = s.pop();
+            stringstream s1(op1_str);
+            s1>>op_1;
+            stringstream s2(op2_str);
+            s2>>op_2;
+            // int op_1 = stoi(op1_str);
+            // int op_2 = stoi(op2_str);
 
-            stringstream ss1(op1);
-            stringstream ss2(op2);
-            int op_1, op_2;
-
-            ss1 >> op_1;
-            ss2 >> op_2;
-
-            int res;
-            switch (token[0])
+            switch (postfix[i])
             {
             case '+':
                 res = op_1 + op_2;
@@ -203,15 +174,17 @@ void expression::post_eval()
                 return;
             }
 
-            stringstream resultStream;
-            resultStream << res;
-            s.push(resultStream.str());
+            // s.push(to_string(res));
+            stringstream stm3;
+            stm3 << res;
+            s.push(stm3.str()); 
         }
         else
         {
-            s.push(token);
+            s.push(string(1, postfix[i])); 
         }
     }
+
     cout << "Result: " << s.pop() << endl;
 }
 
