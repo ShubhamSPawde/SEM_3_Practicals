@@ -81,7 +81,6 @@ void expression::prefix_to_infix()
 
 void expression::infix_to_post()
 {
-    postfix = "";
     cout << "Enter Infix String: ";
     cin >> infix;
 
@@ -89,15 +88,15 @@ void expression::infix_to_post()
     {
         if (infix[i] == '(')
         {
-            s.push(string(1, infix[i]));
+            s.push("(");
         }
-        else if (!isoperator(infix[i]) && infix[i] != '(' && infix[i] == ')')
+        else if (isoperator(infix[i]) == false && infix[i] != '(' && infix[i] != ')')
         {
             postfix += infix[i];
         }
         else if (infix[i] == ')')
         {
-            while (s.peep() != "(" && s.isEmpty())
+            while (s.peep() != "(" && !s.isEmpty())
             {
                 string temp = s.pop();
                 postfix += temp;
